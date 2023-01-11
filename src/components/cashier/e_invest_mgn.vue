@@ -140,7 +140,7 @@
                     v-model="electric.room_id"
                   >
                     <option
-                      v-for="option in roomList"
+                      v-for="option in roomAddList"
                       :value="option.id"
                       :key="option.id"
                     >
@@ -229,7 +229,7 @@
                 <div class="col-auto">
                   <select class="form-select w-65" aria-label="Default" v-model="ProxyData.room_id">
                     <option
-                      v-for="option in roomList"
+                      v-for="option in roomAddList"
                       :value="option.id"
                       :key="option.id"
                       disabled
@@ -622,6 +622,7 @@ export default {
 
 
       roomList: [],
+      roomAddList:[],
 
       enableOptions: [
         { id: 1, text: "启用" },
@@ -629,7 +630,7 @@ export default {
       ],
 
       electric: {
-        room_id: 0,
+        room_id: 1,
         aaccount: "",
         password: "",
       },
@@ -654,6 +655,7 @@ export default {
   async mounted() {
     this.callElectricList();
     this.callCurRoomList();
+    this.callRoomAddList();
   },
 
   methods: {
@@ -704,6 +706,14 @@ export default {
         const roomResult = res.data.data.room;
         this.roomList = roomResult;
         this.roomList.push({ id: 0, name: "全部" });
+      });
+    },
+
+    callRoomAddList(){
+      getCurRoomList().then((res) => {
+        console.log(res);
+        const roomResult = res.data.data.room;
+        this.roomAddList = roomResult;
       });
     },
 

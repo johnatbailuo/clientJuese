@@ -74,7 +74,7 @@
 
     <EasyDataTable :headers="headers" :items="shiftList">
       <template #item-time="{ time }">
-        <p>{{ changeTimetoString(time) }}</p>
+        <span>{{ changeTimetoString(time) }}</span>
       </template>
     </EasyDataTable>
     <button class="m-2 btn btn-outline-secondary">导出 Excel</button>
@@ -140,7 +140,7 @@ export default {
     },
 
     changeTimetoString(time) {
-      return moment(time).format("MMMM DD YYYY");
+      return moment(time*1000).format('YYYY-MM-DD hh:mm:ss')
     },
 
     callCurRoomList() {

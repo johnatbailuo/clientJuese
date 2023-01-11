@@ -18,6 +18,12 @@
         <span v-if="room_id == 1">suolaier</span>
         <span v-else-if="room_id == 2">suolaier线上</span>
       </template>
+      <template #item-create_time="{ create_time }">
+        <span>{{ changeTimetoString(create_time) }}</span>
+      </template>
+      <template #item-update_time="{ update_time }">
+        <span>{{ changeTimetoString(update_time) }}</span>
+      </template>
       <template #item-enable="{ enable }">
         <span v-if="enable == 1">启用</span>
         <span v-else-if="enable == 2">禁用</span>
@@ -201,6 +207,7 @@ import { createToast } from "mosha-vue-toastify";
 // import the styling for the toast
 import "mosha-vue-toastify/dist/style.css";
 import Tree from 'vue3-tree';
+import moment from 'moment';
 
 
 export default {
@@ -287,6 +294,9 @@ export default {
       this.fastOpenClose = !this.fastOpenClose;
     },
 
+    changeTimetoString(time) {
+      return moment(time*1000).format('YYYY-MM-DD hh:mm:ss')
+    },
     async callPermissionList() {
       getPermissionList().then((res) => {
         console.log(res);
@@ -378,7 +388,6 @@ export default {
 </script>
 
 <style scoped>
-@import url("//unpkg.com/element-ui@2.15.11/lib/theme-chalk/index.css");
 
 .form-group.required .control-label:after {
   content: "*";

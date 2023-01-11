@@ -111,12 +111,12 @@
 
     <EasyDataTable :headers="headers" :items="SMSList">
       <template #item-send_time="{send_time}">
-        <p> {{ changeTimetoString(send_time)}}</p>   
+        <span> {{ changeTimetoString(send_time)}}</span>   
       </template>
       <template #item-status="{status}">
-        <p v-if="status	==1"> 传送中</p>
-        <p v-else-if="status==2">传送成功</p>
-        <p v-else-if="status==3">传送失败</p>
+        <span v-if="status	==1"> 传送中</span>
+        <span v-else-if="status==2">传送成功</span>
+        <span v-else-if="status==3">传送失败</span>
       </template>
       <template #item-operation>
         <div class="operation-wrapper">

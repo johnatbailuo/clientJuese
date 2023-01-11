@@ -827,6 +827,30 @@ export function addElectric(room_id, aaccount, password) {
   });
 }
 
+
+export function addPermission(name,rule) {
+  return axios.post("auth/group/create", {
+    name:name,
+    rule:rule
+  });
+}
+
+export function addCash(id,cash) {
+  return axios.post("silverhead/update", {
+    id:id,
+    cash:cash,
+    type:1
+  });
+}
+
+export function reduceCash(id,cash) {
+  return axios.post("silverhead/update", {
+    id:id,
+    cash:cash,
+    type:2
+  });
+}
+
 export function updateElectric(room_id, aaccount, password, id) {
   return axios.post("electric/pitcher/create", {
     room_id: room_id,

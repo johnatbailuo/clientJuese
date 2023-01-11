@@ -127,12 +127,12 @@
 
     <EasyDataTable :headers="headers" :items="bankList">
       <template #item-type="{ type }">
-        <p v-if="type == 1">资金</p>
-        <p v-else-if="type == 2">游戏</p>
-        <p v-else-if="type == 3">客户</p>
-        <p v-else-if="type == 4">码粮</p>
-        <p v-else-if="type == 5">占成</p>
-        <p v-else-if="type == 6">交收</p>
+        <span v-if="type == 1">资金</span>
+        <span v-else-if="type == 2">游戏</span>
+        <span v-else-if="type == 3">客户</span>
+        <span v-else-if="type == 4">码粮</span>
+        <span v-else-if="type == 5">占成</span>
+        <span v-else-if="type == 6">交收</span>
       </template>
       <template #item-operation>
         <div class="operation-wrapper">
@@ -146,7 +146,7 @@
         </div>
       </template>
       <template #item-create_time="{ create_time }">
-        <p>{{ changeTimetoString(create_time)  }}</p>
+        <span>{{ changeTimetoString(create_time)  }}</span>
       </template>
     </EasyDataTable>
     <button class="m-2 btn btn-outline-secondary">导出 Excel</button>
@@ -230,7 +230,7 @@ export default {
     },
 
     changeTimetoString : function (time) {
-      return moment(time).format("YYYY-MM-DD hh:mm:ss");
+      return moment(time*1000).format("YYYY-MM-DD hh:mm:ss");
     },
     
 

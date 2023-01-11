@@ -142,8 +142,18 @@
 
         <div class="row">
           <div class="col-1"></div>
-          <div class="col-1">
+          <div class="col-2">
             <label for="account" class="col-form-label">泥码总数</label>
+          </div>
+          <div class="col-2 m-1">
+            <p class=""> {{ silverHead.dead_chips}}</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-1"></div>
+          <div class="col-2">
+            <label for="account" class="col-form-label">现金码总数</label>
           </div>
           <div class="col-2 m-1">
             <p class=""> {{ silverHead.regular_chips}}</p>
@@ -153,9 +163,9 @@
     </div>
 
     <div class="row">
-      <div class="col-1 text-center my-auto">现金码总数</div>
+      <!-- <div class="col-1 text-center my-auto">现金码总数</div> -->
       <div class="col-4">
-        <EasyDataTable :headers="headers" :items="items">
+        <!-- <EasyDataTable :headers="headers" :items="items">
           <template #item-operation>
             <div class="operation-wrapper">
               <button
@@ -167,7 +177,7 @@
               </button>
             </div>
           </template>
-        </EasyDataTable>
+        </EasyDataTable> -->
         <!-- <EasyDataTable class="mt-2" :headers="headers" :items="items">
           <template #item-operation>
             <div class="operation-wrapper">
@@ -284,6 +294,7 @@
           <button
             class="btn btn-primary d-flex text-center justify-content-center"
             type="button"
+            @click="addCash()"
           >
             确定
           </button>
@@ -327,7 +338,7 @@
                 >
               </div>
               <div class="col-5">
-                <input type="email" class="form-control" id="inputAccount" />
+                <input type="number" class="form-control" id="inputAccount" v-model="reduce.cash" />
               </div>
               <div class="col-1"><p>万</p></div>
             </div>
@@ -338,6 +349,7 @@
           <button
             class="btn btn-primary d-flex text-center justify-content-center"
             type="button"
+            @click="reduceCash()"
           >
             确定
           </button>
@@ -619,7 +631,10 @@
 
 <script>
 // import { getSilverList } from "../../network/api";
-import { getCurRoomList,getSilverHead } from "../../network/api";
+import { getCurRoomList,getSilverHead,addCash,reduceCash } from "../../network/api";
+import { createToast } from "mosha-vue-toastify";
+// import the styling for the toast
+import "mosha-vue-toastify/dist/style.css";
 
 
 export default {
@@ -654,6 +669,10 @@ export default {
 
       add:{
         cash: ''
+      },
+
+      reduce:{
+        cash:''
       },
 
       headers: [
@@ -765,6 +784,7 @@ export default {
     },
     reducOpenCloseFun() {
       this.reducOpenClose = !this.reducOpenClose;
+      this.reduce.cash=""
     },
     bigMBuyOpenCloseFun() {
       this.bigMBuyOpenClose = !this.bigMBuyOpenClose;
@@ -790,6 +810,31 @@ export default {
         this.roomList = roomResult;
       })
     },
+
+    addCash(){
+      addCash(this.silverHead.id,this.add.cash).then((res) => {
+        if (res.data.code == 1000) {
+          createToast(res.data.message);
+          console.log(res);
+          this.addmOpenClose = !this.addmOpenClose;
+        } else {
+          createToast(res.data.message);
+        }
+      })
+    },
+
+    reduceCash(){
+      reduceCash(this.silverHead.id,this.reduce.cash).then((res) => {
+        if (res.data.code == 1000) {
+          createToast(res.data.message);
+          console.log(res);
+          this.reducOpenClose = !this.reducOpenClose;
+        } else {
+          createToast(res.data.message);
+        }
+      })
+    },
+
 
     callSilverHead(){
       getSilverHead(this.vipSelected, this.currency_id).then((res) => {

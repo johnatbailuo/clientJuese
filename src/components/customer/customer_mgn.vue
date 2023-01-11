@@ -2733,8 +2733,8 @@ export default {
       username: "",
       useraccount: "",
       userid: "",
-      currencySelected: 0,
-      account_currency: 0,
+      currencySelected: 1,
+      account_currency: 1,
 
       uid: "1",
 
@@ -2745,7 +2745,7 @@ export default {
 
       // add agent
       agent: {
-        currency_id: 0,
+        currency_id: 1,
         bet_against_per: "",
         commission_per: "",
       },
@@ -2759,33 +2759,38 @@ export default {
       // 存款
       Deposit: {
         // currencySelected:"1",
-        roomSelected: 0,
+        roomSelected: 1,
         money: "",
         remark: "",
       },
 
       // 提现
       Withdraw: {
-        room_id: 0,
+        room_id: 1,
         money: "",
         remark: "",
       },
 
       // 转账
       Transfer: {
-        currency_id: 0,
-        room_id: 0,
+        currency_id: 1,
+        room_id: 1,
         money: "",
         remark: "",
         receive_account: "",
       },
 
+      aglNetTran:{
+        room_id:1,
+        currency_id:1,
+      },
+
       // 换汇
       Exchange: {
-        room_id: 0,
+        room_id: 1,
         from_currency: "",
-        from_amount: "0",
-        to_currency: "0",
+        from_amount: "1",
+        to_currency: "1",
         to_amount: "",
         deviation_from: "",
         deviation_to: "",
@@ -3257,11 +3262,11 @@ export default {
 
         const curResult = res.data.data.currency;
         this.currencyList = curResult;
-        this.currencyList.push({ id: 0, currency_name: "全部" });
+        // this.currencyList.push({ id: 0, currency_name: "全部" });
 
         const roomResult = res.data.data.room;
         this.roomList = roomResult;
-        this.roomList.push({ id: 0, name: "全部" });
+        // this.roomList.push({ id: 0, name: "全部" });
       });
     },
 

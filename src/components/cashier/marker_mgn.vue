@@ -191,7 +191,7 @@
               >
               <div class="col-4">
                 <input
-                  type="email"
+                  type="password"
                   class="form-control"
                   id="inputAccount"
                   v-model="password"
@@ -257,7 +257,7 @@
               >
               <div class="col-4">
                 <input
-                  type="email"
+                  type="number"
                   class="form-control"
                   id="inputAccount"
                   v-model="money"
@@ -482,8 +482,6 @@ export default {
         console.log(res);
         const curResult = res.data.data.currency;
         this.currencyList = curResult;
-        this.currencyList.push({id:0,currency_name:"全部"})
-
         const roomResult = res.data.data.room;
         this.roomList = roomResult;
       });

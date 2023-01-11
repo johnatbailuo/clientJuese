@@ -100,10 +100,13 @@
 
     <EasyDataTable :headers="headers" :items="exchangeList">
       <template #item-from_currency="{from_currency}">
-        <p v-if="from_currency==1"> 人民币</p>
-        <p v-else-if="from_currency==2">美元</p>
-        <p v-else-if="from_currency==3">港币</p>
-        <p v-else-if="from_currency==4">菲币</p>
+        <span v-if="from_currency==1"> 人民币</span>
+        <span v-else-if="from_currency==2">美元</span>
+        <span v-else-if="from_currency==3">港币</span>
+        <span v-else-if="from_currency==4">菲币</span>
+      </template>
+      <template #item-time="{time}">
+        <span> {{ changeTimetoString(time)}}</span>   
       </template>
       <template #item-operation>
         <div class="operation-wrapper">
@@ -124,6 +127,7 @@
 <script>
 import Multiselect from "@vueform/multiselect";
 import {getExchangeList,getCurRoomList} from "../../network/api";
+import moment from 'moment';
 
 export default {
   name: "AddEmployee",
@@ -182,6 +186,12 @@ export default {
         this.exchangeList = result;
       })
     },
+
+    changeTimetoString(time){
+      console.log(time)
+      return moment(time*1000).format('YYYY-MM-DD hh:mm:ss')
+    },
+
     callCurRoomList(){
       getCurRoomList().then((res) => {
         console.log(res);

@@ -90,6 +90,9 @@
     </div>
 
     <EasyDataTable :headers="headers" :items="logList">
+      <template #item-time="{time}">
+        <span> {{ changeTimetoString(time)}}</span>   
+      </template>
     </EasyDataTable>
   </div>
 </template>
@@ -97,6 +100,8 @@
 <script>
 import Multiselect from "@vueform/multiselect";
 import {getLogList,getCurRoomList} from "../../network/api";
+import moment from 'moment';
+
 export default {
   name: "AddEmployee",
   components: {
@@ -109,8 +114,8 @@ export default {
 
   data() {
     return {
-      start_date:"1671410000",
-      end_date:"1671440000",
+      start_date:new Date().toISOString().slice(0, 10),
+      end_date:new Date().toISOString().slice(0, 10),
       type:0,
       account:"",
       roomList:[],
@@ -137,8 +142,8 @@ export default {
   methods: {
     callLogList(){
       getLogList(
-        this.start_date,
-        this.end_date,
+        (new Date(this.start_date).getTime())/1000,
+        (new Date(this.end_date).getTime())/1000,
         this.type,
         1,
         10,
@@ -151,11 +156,19 @@ export default {
         this.logList = result;
       })
     },
+
+    changeTimetoString(time){
+      console.log(time)
+      return moment(time*1000).format('YYYY-MM-DD hh:mm:ss')
+    },
+    
     callCurRoomList(){
       getCurRoomList().then((res) => {
         console.log(res);
         const roomResult = res.data.data.room;
         this.roomList = roomResult;
+        this.roomList.push({id:0,name:"全部"})
+
       })
     },
 

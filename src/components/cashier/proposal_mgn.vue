@@ -90,7 +90,7 @@
       <div class="col-auto">
         <select class="form-select w-65" aria-label="Default" v-model="room_id">
           <option
-            v-for="option in roomList"
+            v-for="option in roomSearchList"
             :value="option.id"
             :key="option.id"
           >
@@ -105,7 +105,7 @@
       <div class="col-2">
         <select class="form-select" aria-label="Default" v-model="currency_id">
           <option
-            v-for="option in currencyList"
+            v-for="option in currencySearchList"
             :value="option.id"
             :key="option.id"
           >
@@ -419,15 +419,15 @@
                 <select
                   class="form-select form-select-sm"
                   aria-label=".form-select-sm example"
-                  v-model="proposal.dead_chips"
                 >
-                  <option
+                  <!-- <option
                     v-for="option in chipOptions"
                     :value="option.id"
                     :key="option.id"
                   >
                     {{ option.text }}
-                  </option>
+                  </option> -->
+                  <option value="1"> 泥码 </option>
                 </select>
               </div>
               <div class="col-2">
@@ -444,15 +444,17 @@
                 <select
                   class="form-select form-select-sm"
                   aria-label=".form-select-sm example"
-                  v-model="proposal.regular_chips"
                 >
-                <option
+                <!-- <option
                 v-for="option in chipOptions"
                 :value="option.id"
                 :key="option.id"
               >
                 {{ option.text }}
-              </option>
+              </option> -->
+
+              <option value="1" > 现金码 </option>
+
                 </select>
               </div>
               <div class="col-2">
@@ -1006,8 +1008,10 @@ export default {
       },
 
       roomList: [],
-
       currencyList: [],
+
+      roomSearchList:[],
+      currencySearchList:[],
 
       proposalStatusOptions:[
         {id:0,text:"全部"},
@@ -1082,6 +1086,7 @@ export default {
   async mounted() {
      this.callProposalList();
      this.callCurRoomList();
+     this.callSearchCurRoomList();
   },
 
   methods: {
@@ -1170,17 +1175,25 @@ export default {
       } 
     },
 
+    callSearchCurRoomList(){
+      getCurRoomList().then((res) => {
+        console.log(res);
+        const curResult = res.data.data.currency;
+        this.currencySearchList = curResult;
+        this.currencySearchList.push({id:0,currency_name:"全部"})
+        const roomResult = res.data.data.room;
+        this.roomSearchList = roomResult;
+        this.roomSearchList.push({id:0,name:"全部"})
+      })
+    },
+
     callCurRoomList(){
       getCurRoomList().then((res) => {
         console.log(res);
         const curResult = res.data.data.currency;
         this.currencyList = curResult;
-        this.currencyList.push({id:0,currency_name:"全部"})
-
         const roomResult = res.data.data.room;
         this.roomList = roomResult;
-        this.roomList.push({id:0,name:"全部"})
-
       })
     },
 

@@ -144,13 +144,13 @@
 
     <EasyDataTable :headers="headers" :items="exchangeList">
       <template #item-currency="{currency}">
-        <p v-if="currency==1"> 人民币</p>
-        <p v-else-if="currency==2">美元</p>
-        <p v-else-if="currency==3">港币</p>
-        <p v-else-if="currency==4">菲币</p>
+        <span v-if="currency==1"> 人民币</span>
+        <span v-else-if="currency==2">美元</span>
+        <span v-else-if="currency==3">港币</span>
+        <span v-else-if="currency==4">菲币</span>
       </template>
       <template #item-create_time="{create_time}">
-        <p> {{ changeTimetoString(create_time)}}</p>   
+        <span> {{ changeTimetoString(create_time)}}</span>   
       </template>
       <template #item-operation>
         <div class="operation-wrapper">
@@ -243,7 +243,7 @@ export default {
     },
 
     changeTimetoString(time){
-      return moment(time).format('MMMM DD YYYY')
+      return moment(time*1000).format('YYYY-MM-DD hh:mm:ss')
     },
 
     callCurRoomList(){
