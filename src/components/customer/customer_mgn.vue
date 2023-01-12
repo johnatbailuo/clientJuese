@@ -78,7 +78,7 @@
           <button
             type="button"
             class="btn btn-outline-secondary ms-2"
-            @click="PrintOpenCloseFun(item.id)"
+            @click="prePrintOpenCloseFun(item)"
           >
             打印marker单
           </button>
@@ -267,12 +267,12 @@
                     {{ ProxyData.account }}
                   </p> -->
                   <input
-                  type="text"
-                  class="form-control"
-                  id="inputAccount"
-                  placeholder="代理网账号"
-                  v-model="bind_agent.account"
-                />
+                    type="text"
+                    class="form-control"
+                    id="inputAccount"
+                    placeholder="代理网账号"
+                    v-model="bind_agent.account"
+                  />
                 </div>
               </div>
 
@@ -489,6 +489,157 @@
               class="btn btn-danger d-flex justify-content-center"
               type="button"
               @click="AccountOpenCloseFun()"
+            >
+              关闭
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      v-if="prePrintOpenClose"
+      class="modal fade show w-full"
+      tabindex="-1"
+      style="display: block; left: 0%; top: 3%"
+      aria-hidden="true"
+      role="dialog"
+    >
+      <div class="modal-dialog modal-l">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1
+              class="modal-title fs-5 w-100 p2 text-center"
+              id="exampleModalLabel"
+              style="background-color: #91bad6"
+            >
+              打印 Marker 单
+            </h1>
+          </div>
+
+          <div class="modal-body">
+            <form class="p-4">
+              <div class="form-row row col-md-auto">
+                <div class=" border-secondary row rounded">
+                  <label class="col-auto mt-2">名称</label>
+                  <p class="col-auto mt-2 font-weight-bold">
+                    {{ ProxyData.name }}
+                  </p>
+                </div>
+
+                <div class=" border-secondary row rounded">
+                  <label class="col-auto mt-2">账号</label>
+                  <p class="col-auto mt-2 font-weight-bold">
+                    {{ ProxyData.account }}
+                  </p>
+                </div>
+
+                <div
+                  class=" border-secondary rounded row mt-2 text-center"
+                >
+                  <div class="row col-12">
+                    <p class="col-auto mt-2">货币类型</p>
+                    <div class="col-4 ms-4 mt-1">
+                      <select
+                        class="form-select"
+                        aria-label="Default"
+                        v-model="preprint.currency_id"
+                      >
+                        <option
+                          v-for="option in currencyList"
+                          :value="option.id"
+                          :key="option.id"
+                        >
+                          {{ option.currency_name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class=" border-secondary rounded row mt-2 text-center"
+                >
+                  <div class="row col-12">
+                    <p class="col-auto mt-2">金额</p>
+                    <div class="col-auto mt-1">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="inputAccount"
+                        v-model="preprint.money"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class=" border-secondary rounded row mt-2 text-center"
+                >
+                  <div class="row col-12">
+                    <p class="col-auto mt-2">利息</p>
+                    <div class="col-auto mt-1">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="inputAccount"
+                        v-model="preprint.interest_rate"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class=" border-secondary rounded row mt-2 text-center"
+                >
+                  <div class="row col-12">
+                    <p class="col-auto mt-2">备注</p>
+                    <div class="col-auto mt-1">
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="inputAccount"
+                        v-model="preprint.remark"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="md-form md-outline input-with-post-icon datepicker"
+                  >
+                  <div class="row col-12">
+                    <label class="col-auto mt-2" for="example">还款日期</label>
+                    <div class="col-auto mt-1">
+
+                    <input
+                      placeholder="Select date"
+                      v-model="preprint.deadline"
+                      type="date"
+                      id="example"
+                      class="form-control"
+                    />
+                  </div>
+
+                  </div>
+                   
+                  </div>
+                </div>
+              </div>
+            </form>
+            <slot></slot>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              class="btn btn-primary d-flex text-center justify-content-center"
+              type="button"
+              @click="printMarker()"
+            >
+              确定
+            </button>
+            <button
+              class="btn btn-danger d-flex text-center justify-content-center"
+              type="button"
+              @click="prePrintOpenCloseFun()"
             >
               关闭
             </button>
@@ -1954,18 +2105,29 @@
 
                 <div class="form-group col-md-4 mt-2">
                   <label id="preview" for="file-upload">
-                    <img class="mw-100" :key="personalPhoto" v-if="personalPhoto" :src="personalPhoto"/> 
-                 </label>
-                  <div class="file-upload"> 
-                     <label class="file-upload-button" for="file-upload">选择个人照片</label> 
-                     <input type="file" id="file-upload" @change="uploadPersonalImageHandle"/>
+                    <img
+                      class="mw-100"
+                      :key="personalPhoto"
+                      v-if="personalPhoto"
+                      :src="personalPhoto"
+                    />
+                  </label>
+                  <div class="file-upload">
+                    <label class="file-upload-button" for="file-upload"
+                      >选择个人照片</label
+                    >
+                    <input
+                      type="file"
+                      id="file-upload"
+                      @change="uploadPersonalImageHandle"
+                    />
                   </div>
-                 <div v-if="personalPhoto">
-                   <button class="btn btn-outline-dark"  @click="removeImage()">删除图像</button>
-                 </div>
+                  <div v-if="personalPhoto">
+                    <button class="btn btn-outline-dark" @click="removeImage()">
+                      删除图像
+                    </button>
+                  </div>
                 </div>
-
-
 
                 <div class="form-group col-md-6 m-auto p-auto mt-4">
                   <!-- <div class="form-check form-check-inline">
@@ -2072,15 +2234,31 @@
 
                 <div class="form-group col-md-4 mt-2">
                   <label id="id-preview" for="file-id-upload">
-                    <img class="mw-100" :key="idPhoto" v-if="idPhoto" :src="idPhoto"/> 
-                 </label>
-                  <div class="file-id-upload"> 
-                     <label class="file-upload-button" for="file-id-upload">选择证件照片</label> 
-                     <input type="file" id="file-id-upload" @change="uploadIdImageHandle"/>
+                    <img
+                      class="mw-100"
+                      :key="idPhoto"
+                      v-if="idPhoto"
+                      :src="idPhoto"
+                    />
+                  </label>
+                  <div class="file-id-upload">
+                    <label class="file-upload-button" for="file-id-upload"
+                      >选择证件照片</label
+                    >
+                    <input
+                      type="file"
+                      id="file-id-upload"
+                      @change="uploadIdImageHandle"
+                    />
                   </div>
-                 <div v-if="idPhoto">
-                   <button class="btn btn-outline-dark"  @click="removeIdImage()">删除图像</button>
-                 </div>
+                  <div v-if="idPhoto">
+                    <button
+                      class="btn btn-outline-dark"
+                      @click="removeIdImage()"
+                    >
+                      删除图像
+                    </button>
+                  </div>
                 </div>
 
                 <div class="form-group ml-lg-4 col-md-6"></div>
@@ -2233,141 +2411,140 @@
     </div>
 
     <div
-    v-if="CertOpenClose"
-    class="modal fade show w-10"
-    tabindex="-1"
-    style="display: block"
-    id="exampleModal"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-    role="dialog"
-  >
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1
-            class="modal-title fs-5 w-100 p2 text-center"
-            id="exampleModalLabel"
-            style="background-color: #91bad6"
-          >
-            新增证件类型
-          </h1>
-        </div>
-        <div class="modal-body">
-          <form class="p-4">
-            <div class="form-row row">
-              <div class="form-group required col-md-6">
-                <label class="control-label" for="inputAccount">中文</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="inputAccount"
-                  placeholder="中文"
-                  v-model="Certificate.ch_name"
-                />
-              </div>
-              <div class="form-group required col-md-6">
-                <label class="control-label" for="inputAccount">英文</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="inputAccount"
-                  placeholder="英文"
-                  v-model="Certificate.en_name"
-                />
-              </div>
-            </div>
-          </form>
-          <slot></slot>
-        </div>
-        <div class="modal-footer">
-          <button
-            class="btn btn-primary d-flex justify-content-center"
-            type="button"
-            @click="addCertificate()"
-          >
-            确定
-          </button>
-          <button
-            class="btn btn-danger d-flex justify-content-center"
-            type="button"
-            @click="CertOpenCloseFun()"
-          >
-            取消
-          </button>
-        </div>
-      </div>
-    </div>
-    </div>
-
-  <div
-  v-if="CountryOpenClose"
-  class="modal fade show w-10"
-  tabindex="-1"
-  style="display: block"
-  id="exampleModal"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
-  role="dialog"
->
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1
-          class="modal-title fs-5 w-100 p2 text-center"
-          id="exampleModalLabel"
-          style="background-color: #91bad6"
-        >
-          新增国籍
-        </h1>
-      </div>
-      <div class="modal-body">
-        <form class="p-4">
-          <div class="form-row row">
-            <div class="form-group required col-md-6">
-              <label class="control-label" for="inputAccount">中文</label>
-              <input
-                type="text"
-                class="form-control"
-                id="inputAccount"
-                placeholder="中文"
-                v-model="Country.ch_name"
-              />
-            </div>
-            <div class="form-group required col-md-6">
-              <label class="control-label" for="inputAccount">英文</label>
-              <input
-                type="text"
-                class="form-control"
-                id="inputAccount"
-                placeholder="英文"
-                v-model="Country.en_name"
-              />
-            </div>
+      v-if="CertOpenClose"
+      class="modal fade show w-10"
+      tabindex="-1"
+      style="display: block"
+      id="exampleModal"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+      role="dialog"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1
+              class="modal-title fs-5 w-100 p2 text-center"
+              id="exampleModalLabel"
+              style="background-color: #91bad6"
+            >
+              新增证件类型
+            </h1>
           </div>
-        </form>
-        <slot></slot>
-      </div>
-      <div class="modal-footer">
-        <button
-          class="btn btn-primary d-flex justify-content-center"
-          type="button"
-          @click="addCountry()"
-        >
-          确定
-        </button>
-        <button
-          class="btn btn-danger d-flex justify-content-center"
-          type="button"
-          @click="CountryOpenCloseFun()"
-        >
-          取消
-        </button>
+          <div class="modal-body">
+            <form class="p-4">
+              <div class="form-row row">
+                <div class="form-group required col-md-6">
+                  <label class="control-label" for="inputAccount">中文</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputAccount"
+                    placeholder="中文"
+                    v-model="Certificate.ch_name"
+                  />
+                </div>
+                <div class="form-group required col-md-6">
+                  <label class="control-label" for="inputAccount">英文</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputAccount"
+                    placeholder="英文"
+                    v-model="Certificate.en_name"
+                  />
+                </div>
+              </div>
+            </form>
+            <slot></slot>
+          </div>
+          <div class="modal-footer">
+            <button
+              class="btn btn-primary d-flex justify-content-center"
+              type="button"
+              @click="addCertificate()"
+            >
+              确定
+            </button>
+            <button
+              class="btn btn-danger d-flex justify-content-center"
+              type="button"
+              @click="CertOpenCloseFun()"
+            >
+              取消
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
 
+    <div
+      v-if="CountryOpenClose"
+      class="modal fade show w-10"
+      tabindex="-1"
+      style="display: block"
+      id="exampleModal"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+      role="dialog"
+    >
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1
+              class="modal-title fs-5 w-100 p2 text-center"
+              id="exampleModalLabel"
+              style="background-color: #91bad6"
+            >
+              新增国籍
+            </h1>
+          </div>
+          <div class="modal-body">
+            <form class="p-4">
+              <div class="form-row row">
+                <div class="form-group required col-md-6">
+                  <label class="control-label" for="inputAccount">中文</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputAccount"
+                    placeholder="中文"
+                    v-model="Country.ch_name"
+                  />
+                </div>
+                <div class="form-group required col-md-6">
+                  <label class="control-label" for="inputAccount">英文</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputAccount"
+                    placeholder="英文"
+                    v-model="Country.en_name"
+                  />
+                </div>
+              </div>
+            </form>
+            <slot></slot>
+          </div>
+          <div class="modal-footer">
+            <button
+              class="btn btn-primary d-flex justify-content-center"
+              type="button"
+              @click="addCountry()"
+            >
+              确定
+            </button>
+            <button
+              class="btn btn-danger d-flex justify-content-center"
+              type="button"
+              @click="CountryOpenCloseFun()"
+            >
+              取消
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div
       v-if="AddOpenClose"
@@ -2682,13 +2859,23 @@
 import Item from "./Item.vue";
 import VirtualList from "vue3-virtual-scroll-list";
 import { getData } from "./data";
-import { exchange, getCacList,getUserList, getCurRoomList } from "../../network/api";
+import {
+  exchange,
+  getCacList,
+  getUserList,
+  getCurRoomList,
+} from "../../network/api";
 import { addAgent } from "../../network/api";
 import { bindAgent } from "../../network/api";
 import { deposit } from "../../network/api";
 import { withdraw } from "../../network/api";
 import { transfer } from "../../network/api";
-import { updateAgentPassword,addCertificate,uploadImage } from "../../network/api";
+import {
+  updateAgentPassword,
+  addCertificate,
+  uploadImage,
+  printMarker
+} from "../../network/api";
 import { addUser } from "../../network/api";
 import { createToast } from "mosha-vue-toastify";
 // import the styling for the toast
@@ -2711,6 +2898,7 @@ export default {
       ResetOpenClose: this.visible,
       AccountOpenClose: this.visible,
       PrintOpenClose: this.visible,
+      prePrintOpenClose: this.visible,
       ProposalOpenClose: this.visible,
       cpOpenClose: this.visible,
       lrOpenClose: this.visible,
@@ -2727,7 +2915,7 @@ export default {
       userList: [],
       currencyList: [],
       roomList: [],
-      certiList : [],
+      certiList: [],
       citizenList: [],
 
       username: "",
@@ -2780,9 +2968,17 @@ export default {
         receive_account: "",
       },
 
-      aglNetTran:{
-        room_id:1,
-        currency_id:1,
+      aglNetTran: {
+        room_id: 1,
+        currency_id: 1,
+      },
+
+      preprint: {
+        currency_id: 1,
+        money: "",
+        interest_rate: "",
+        remark: "",
+        deadline: new Date().toISOString().slice(0, 10),
       },
 
       // 换汇
@@ -2822,14 +3018,14 @@ export default {
       proxyPassword: "",
       idPhoto: "",
 
-      Certificate:{
-        ch_name:"",
-        en_name:"",
+      Certificate: {
+        ch_name: "",
+        en_name: "",
       },
 
-      Country:{
-        ch_name:"",
-        en_name:"",
+      Country: {
+        ch_name: "",
+        en_name: "",
       },
 
       itemComponent: Item,
@@ -2915,7 +3111,7 @@ export default {
       // getUserListbyid()
     },
 
-    CountryOpenCloseFun(){
+    CountryOpenCloseFun() {
       this.CountryOpenClose = !this.CountryOpenClose;
     },
 
@@ -2928,12 +3124,21 @@ export default {
       this.ProxyData = data;
     },
 
-    CertOpenCloseFun(){
-      this.CertOpenClose =  !this.CertOpenClose;
+    CertOpenCloseFun() {
+      this.CertOpenClose = !this.CertOpenClose;
     },
 
     PrintOpenCloseFun(data) {
       this.PrintOpenClose = !this.PrintOpenClose;
+    },
+
+    prePrintOpenCloseFun(data) {
+      this.prePrintOpenClose = !this.prePrintOpenClose;
+      this.ProxyData = data;
+      this.preprint.password ="";
+      this.preprint.money="";
+      this.preprint.interest_rate="";
+      this.preprint.remark="";
     },
 
     ProposalOpenCloseFun(data) {
@@ -2961,42 +3166,42 @@ export default {
       this.password = "";
       this.bet_against_per_max = "";
       this.commission_per_max = "";
-      this.interest_per_max = ""
-      this.birthday = new Date().toISOString().slice(0, 10)
-      this.photo = ""
-      this.id_num = ""
-      this.id_photo = ""
-      this.telephone = ""
-      this.address = ""
-      this.attach = ""
+      this.interest_per_max = "";
+      this.birthday = new Date().toISOString().slice(0, 10);
+      this.photo = "";
+      this.id_num = "";
+      this.id_photo = "";
+      this.telephone = "";
+      this.address = "";
+      this.attach = "";
     },
     DpOpenCloseFun() {
       this.DpOpenClose = !this.DpOpenClose;
-      this.Deposit.money=""
-      this.Deposit.remark=""
+      this.Deposit.money = "";
+      this.Deposit.remark = "";
     },
     WdOpenCloseFun() {
       this.WdOpenClose = !this.WdOpenClose;
-      this.Withdraw.money=""
-      this.Withdraw.remark=""
+      this.Withdraw.money = "";
+      this.Withdraw.remark = "";
     },
     TfOpenCloseFun() {
       this.TfOpenClose = !this.TfOpenClose;
-      this.Transfer.money=""
-      this.Transfer.remark=""
-      this.Transfer.receive_account =""
+      this.Transfer.money = "";
+      this.Transfer.remark = "";
+      this.Transfer.receive_account = "";
     },
     exOpenCloseFun() {
       this.exOpenClose = !this.exOpenClose;
-      this.Exchange.from_currency=""
-      this.Exchange.to_amount =""
-      this.Exchange.deviation_from=""
-      this.Exchange.deviation_to=""
-      this.Exchange.exchange_rate_from=""
-      this.Exchange.exchange_rate_to=""
-      this.Exchange.original_exchange_rate_from=""
-      this.Exchange.original_exchange_rate_to=""
-      this.Exchange.remark=""
+      this.Exchange.from_currency = "";
+      this.Exchange.to_amount = "";
+      this.Exchange.deviation_from = "";
+      this.Exchange.deviation_to = "";
+      this.Exchange.exchange_rate_from = "";
+      this.Exchange.exchange_rate_to = "";
+      this.Exchange.original_exchange_rate_from = "";
+      this.Exchange.original_exchange_rate_to = "";
+      this.Exchange.remark = "";
     },
     callUserList() {
       getUserList(this.useraccount, this.username).then((res) => {
@@ -3020,42 +3225,38 @@ export default {
     //   };
     // },
 
-    removeImage(){
-       this.personalPhoto = null;
-       this.photo ="";
+    removeImage() {
+      this.personalPhoto = null;
+      this.photo = "";
     },
 
-    removeIdImage(){
-       this.idPhoto = null;
-       this.id_photo ="";
+    removeIdImage() {
+      this.idPhoto = null;
+      this.id_photo = "";
     },
 
     async addCertificate() {
-        addCertificate(
-          this.Certificate.ch_name,
-          this.Certificate.en_name
-        ).then((res) => {
+      addCertificate(this.Certificate.ch_name, this.Certificate.en_name).then(
+        (res) => {
           console.log(res);
           createToast(res.data.message);
-          this.Certificate.ch_name=""
-          this.Certificate.en_name=""
+          this.Certificate.ch_name = "";
+          this.Certificate.en_name = "";
           this.callCacList();
-          this.CertOpenClose  = !this.CertOpenClose; 
-        })
+          this.CertOpenClose = !this.CertOpenClose;
+        }
+      );
     },
 
-    async addCountry(){
-      addCountry(
-        this.Country.ch_name,
-        this.Country.en_name,
-      ).then((res) => {
-          console.log(res);
-          createToast(res.data.message);
-          this.Country.ch_name="",
-          this.Country.en_name="",
+    async addCountry() {
+      addCountry(this.Country.ch_name, this.Country.en_name).then((res) => {
+        console.log(res);
+        createToast(res.data.message);
+        (this.Country.ch_name = ""),
+          (this.Country.en_name = ""),
           this.callCacList();
-          this.CountryOpenClose = !this.CountryOpenClose;
-      })
+        this.CountryOpenClose = !this.CountryOpenClose;
+      });
     },
 
     async addAgent() {
@@ -3071,6 +3272,25 @@ export default {
           this.agent.bet_against_per = "";
           this.agent.commission_per = "";
           this.aglOpenClose = !this.aglOpenClose;
+        } else {
+          createToast(res.data.message);
+        }
+      });
+    },
+
+    async printMarker() {
+      printMarker(
+        this.ProxyData.account,
+        this.ProxyData.password,
+        this.preprint.currency_id,
+        this.preprint.money,
+        new Date( this.preprint.deadline).getTime() / 1000,
+        this.preprint.interest_rate,
+        this.preprint.remark
+      ).then((res) => {
+        if (res.data.code == 1000) {
+          createToast(res.data.message);
+          this.prePrintOpenClose = !this.prePrintOpenClose;
         } else {
           createToast(res.data.message);
         }
@@ -3106,10 +3326,10 @@ export default {
         console.log(res);
         if (res.data.code == 1000) {
           createToast(res.data.message);
-          this.Deposit.roomSelected = "",
-            this.Deposit.money = "",
-            this.Deposit.remark = "",
-            this.DpOpenClose = !this.DpOpenClose;
+          (this.Deposit.roomSelected = ""),
+            (this.Deposit.money = ""),
+            (this.Deposit.remark = ""),
+            (this.DpOpenClose = !this.DpOpenClose);
         } else {
           createToast(res.data.message);
         }
@@ -3127,14 +3347,13 @@ export default {
         console.log(res);
         if (res.data.code == 1000) {
           createToast(res.data.message);
-          this.Withdraw.room_id = "",
-          this.Withdraw.money = "",
-          this.Withdraw.remark = "",
-        this.WdOpenClose = !this.WdOpenClose;
+          (this.Withdraw.room_id = ""),
+            (this.Withdraw.money = ""),
+            (this.Withdraw.remark = ""),
+            (this.WdOpenClose = !this.WdOpenClose);
         } else {
           createToast(res.data.message);
         }
-        
       });
     },
 
@@ -3148,17 +3367,16 @@ export default {
         this.Transfer.receive_account
       ).then((res) => {
         console.log(res);
-        if(res.data.code == 1000){
+        if (res.data.code == 1000) {
           createToast(res.data.message);
-          this.Transfer.room_id = "",
-          this.Transfer.money = "",
-          this.Transfer.remark = "",
-          this.Transfer.receive_account = "",
-          this.TfOpenClose = !this.TfOpenClose;
+          (this.Transfer.room_id = ""),
+            (this.Transfer.money = ""),
+            (this.Transfer.remark = ""),
+            (this.Transfer.receive_account = ""),
+            (this.TfOpenClose = !this.TfOpenClose);
         } else {
           createToast(res.data.message);
         }
-       
       });
     },
 
@@ -3178,22 +3396,22 @@ export default {
         this.Exchange.original_exchange_rate_to,
         this.Exchange.remark
       ).then((res) => {
-        if(res.data.code == 1000){
-        console.log(res);
-        createToast(res.data.message);
-        this.Exchange.room_id = "0";
-        this.Exchange.from_currency = "";
-        this.Exchange.from_amount = "1";
-        this.Exchange.to_currency = "0";
-        this.Exchange.to_amount = "";
-        this.Exchange.deviation_from = "";
-        this.Exchange.deviation_to = "";
-        this.Exchange.exchange_rate_from = "";
-        this.Exchange.exchange_rate_to = "";
-        this.Exchange.original_exchange_rate_from = "";
-        this.Exchange.original_exchange_rate_to = "";
-        this.Exchange.remark = "";
-        this.exOpenClose = !this.exOpenClose;
+        if (res.data.code == 1000) {
+          console.log(res);
+          createToast(res.data.message);
+          this.Exchange.room_id = "0";
+          this.Exchange.from_currency = "";
+          this.Exchange.from_amount = "1";
+          this.Exchange.to_currency = "0";
+          this.Exchange.to_amount = "";
+          this.Exchange.deviation_from = "";
+          this.Exchange.deviation_to = "";
+          this.Exchange.exchange_rate_from = "";
+          this.Exchange.exchange_rate_to = "";
+          this.Exchange.original_exchange_rate_from = "";
+          this.Exchange.original_exchange_rate_to = "";
+          this.Exchange.remark = "";
+          this.exOpenClose = !this.exOpenClose;
         } else {
           createToast(res.data.message);
         }
@@ -3214,7 +3432,6 @@ export default {
     },
 
     async addUser() {
-
       addUser(
         this.account,
         this.name,
@@ -3223,7 +3440,7 @@ export default {
         this.commission_per_max,
         this.interest_per_max,
         this.gender,
-       (new Date(this.birthday).getTime())/1000,
+        new Date(this.birthday).getTime() / 1000,
         this.photo,
         this.country,
         this.id_type,
@@ -3234,16 +3451,16 @@ export default {
         this.attach
       ).then((res) => {
         console.log(res);
-        if(res.data.code == 1000) {    
-        createToast(res.data.message);
-        this.ncOpenClose = !this.ncOpenClose;
-      } else {
-        createToast(res.data.message);
-      }
+        if (res.data.code == 1000) {
+          createToast(res.data.message);
+          this.ncOpenClose = !this.ncOpenClose;
+        } else {
+          createToast(res.data.message);
+        }
       });
     },
 
-    callCacList(){
+    callCacList() {
       getCacList().then((res) => {
         console.log(res);
         const certResult = res.data.data.certificate;
@@ -3253,7 +3470,7 @@ export default {
         const acadeResult = res.data.data.academic;
         this.academicList = acadeResult;
         // country and acedamic
-      })
+      });
     },
 
     callCurRoomList() {
@@ -3270,14 +3487,14 @@ export default {
       });
     },
 
-    uploadPersonalImageHandle(e){
-      var data = new FormData()
-      data.append('file',e.target.files[0])
+    uploadPersonalImageHandle(e) {
+      var data = new FormData();
+      data.append("file", e.target.files[0]);
       uploadImage(data).then((res) => {
         console.warn(res);
         console.warn(res.data.data.url);
         this.photo = res.data.data.url;
-      })
+      });
 
       const image = e.target.files[0];
       const reader = new FileReader();
@@ -3288,14 +3505,14 @@ export default {
       };
     },
 
-    uploadIdImageHandle(e){
-      var data = new FormData()
-      data.append('file',e.target.files[0])
+    uploadIdImageHandle(e) {
+      var data = new FormData();
+      data.append("file", e.target.files[0]);
       uploadImage(data).then((res) => {
         console.warn(res);
         console.warn(res.data.data.url);
         this.id_photo = res.data.data.url;
-      })
+      });
 
       const image = e.target.files[0];
       const reader = new FileReader();
@@ -3304,9 +3521,7 @@ export default {
         this.idPhoto = e.target.result;
         // uploadImage()
       };
-    }
-
-
+    },
   },
 
   async mounted() {

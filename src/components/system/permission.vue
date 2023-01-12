@@ -88,7 +88,7 @@
           <button
             class="btn btn-primary d-flex text-center justify-content-center"
             type="button"
-            @click="addElectric()"
+            @click="addPermission()"
           >
             确定
           </button>
@@ -195,9 +195,7 @@
 
 <script>
 import {
-  addElectric,
-  getElectricList,
-  unableElectric,
+  addPermission,
   getCurRoomList,
   updateElectric,
   getPermissionList,
@@ -231,6 +229,7 @@ export default {
       room_id: 0,
       account: "",
       enableSeleted: 1,
+      ruleName:"",
 
       roomList: [],
       permissionList: [],
@@ -238,16 +237,6 @@ export default {
       perItemList:[],
 
       
-
-    
-      
-
-      electric: {
-        room_id: 0,
-        aaccount: "",
-        password: "",
-      },
-
       edit: {
         password: "",
       },
@@ -278,11 +267,7 @@ export default {
       this.AddNewOpenClose = !this.AddNewOpenClose;
       (this.electric.aaccount = ""), (this.electric.password = "");
     },
-    BanOpenCloseFun(data) {
-      this.BanOpenClose = !this.BanOpenClose;
-      this.ProxyData = data;
-      console.log(data);
-    },
+ 
 
     EditOpenCloseFun(data) {
       this.EditOpenClose = !this.EditOpenClose;
@@ -290,9 +275,7 @@ export default {
       console.log(data);
     },
    
-    fastOpenCloseFun() {
-      this.fastOpenClose = !this.fastOpenClose;
-    },
+  
 
     changeTimetoString(time) {
       return moment(time*1000).format('YYYY-MM-DD hh:mm:ss')
@@ -339,11 +322,9 @@ export default {
       });
     },
 
-    async addElectric() {
-      addElectric(
-        this.electric.room_id,
-        this.electric.aaccount,
-        this.electric.password
+    async addPermission() {
+      addPermission(
+        this.ruleName,
       ).then((res) => {
         if (res.data.code == 1000) {
           createToast(res.data.message);
@@ -367,19 +348,6 @@ export default {
           console.log(res);
           this.EditOpenClose = !this.EditOpenClose;
         }
-      });
-    },
-
-    async unable() {
-      if (this.ProxyData.enable == 1) {
-        this.ProxyData.enable = 2;
-      } else if (this.ProxyData.enable == 2) {
-        this.ProxyData.enable = 1;
-      }
-      unableElectric(this.ProxyData.id, this.ProxyData.enable).then((res) => {
-        console.log(res);
-        this.BanOpenClose = !this.BanOpenClose;
-        this.callElectricList();
       });
     },
   },

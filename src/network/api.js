@@ -644,6 +644,17 @@ export function addAgent(uid, currency_id, bet_against_per, commission_per) {
   });
 }
 
+export function printMarker(aaccount, password, currency_id, money,deadline,interest_rate,remark) {
+  return axios.post("marker/management/createM", {
+    aaccount: aaccount,
+    password: password,
+    currency_id: currency_id,
+    money: money,
+    deadline:deadline,
+    interest_rate:interest_rate,
+    remark:remark
+  });
+}
 export function updateAgentPassword(uid, password) {
   return axios.post("/user/agent/updatePwd", {
     uid: uid,
@@ -786,7 +797,7 @@ export function getPermissionList() {
   });
 }
 
-export function getPerItemList(){
+export function getPerItemList() {
   let token = localStorage.getItem("token");
   return axios.post("auth/rule/read", {
     headers: {
@@ -827,27 +838,26 @@ export function addElectric(room_id, aaccount, password) {
   });
 }
 
-
-export function addPermission(name,rule) {
+export function addPermission(name, rule) {
   return axios.post("auth/group/create", {
-    name:name,
-    rule:rule
+    name: name,
+    rule: rule,
   });
 }
 
-export function addCash(id,cash) {
+export function addCash(id, cash) {
   return axios.post("silverhead/update", {
-    id:id,
-    cash:cash,
-    type:1
+    id: id,
+    cash: cash,
+    type: 1,
   });
 }
 
-export function reduceCash(id,cash) {
+export function reduceCash(id, cash) {
   return axios.post("silverhead/update", {
-    id:id,
-    cash:cash,
-    type:2
+    id: id,
+    cash: cash,
+    type: 2,
   });
 }
 
